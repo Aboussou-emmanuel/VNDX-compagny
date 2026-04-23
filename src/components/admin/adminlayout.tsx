@@ -11,7 +11,7 @@ const navItems = [
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -66,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-white text-xs font-medium truncate">{user?.email || 'Admin'}</p>
-            <p className="text-gray-500 text-xs">Administrateur</p>
+<p className="text-gray-500 text-xs">{user?.role ? (user.role === 'admin' ? 'Administrateur' : 'Utilisateur') : 'Chargement...'}</p>
           </div>
         </div>
         <button

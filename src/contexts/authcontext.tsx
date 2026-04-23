@@ -1,49 +1,106 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import type { User } from 'firebase/auth';
+import type { UserWithRole, UserRole } from '../types';
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  onAuthStateChanged,
+  signOut 
+} from 'firebase/auth';
+import { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  serverTimestamp 
+} from 'firebase/firestore';
+import { db } from '../lib/firebase';
+// firebaseConfig not needed
+
+const auth = getAuth();
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: UserWithRole | null;
+  role: UserRole | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  setAdminRole: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+async function loadUserRole(firebaseUser: User): Promise<UserWithRole> {
+  try {
+    const userRef = doc(db, 'users', firebaseUser.uid);
+    const snap = await getDoc(userRef);
+    let role: UserRole = 'user';
+    if (!snap.exists()) {
+      role = (firebaseUser.email === 'Companyvndx@gmail.com') ? 'admin' : 'user';
+      await setDoc(userRef, {
+        email: firebaseUser.email,
+        role,
+        createdAt: serverTimestamp()
+      });
+    } else {
+      const data = snap.data();
+      role = data?.role as UserRole || 'user';
+    }
+    return { ...firebaseUser, role } as UserWithRole;
+  } catch (error) {
+    console.error('Role load error:', error);
+    return { ...firebaseUser, role: 'user' } as UserWithRole;
+  }
+}
+
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<UserWithRole | null>(null);
+  const [role, setRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const userWithRole = await loadUserRole(firebaseUser);
+        setUser(userWithRole);
+        setRole(userWithRole.role ?? 'user');
+      } else {
+        setUser(null);
+        setRole(null);
+      }
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return unsubscribe;
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error };
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      return { error: null };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const setAdminRole = async () => {
+    if (!user) return;
+    const userRef = doc(db, 'users', user.uid);
+    await setDoc(userRef, { 
+      role: 'admin' as UserRole,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    const newUserWithRole = await loadUserRole(user);
+    setUser(newUserWithRole);
+    setRole('admin');
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, role, loading, signIn, signOut, setAdminRole }}>
       {children}
     </AuthContext.Provider>
   );
@@ -54,3 +111,4 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 }
+

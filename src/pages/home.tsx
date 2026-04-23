@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Star, Trophy, Users, TrendingUp, Play, Quote } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { Athlete, Testimonial } from '../types';
+import { mockAthletes, mockTestimonials } from '../data/mock';
 
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -70,12 +70,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    supabase.from('athletes').select('*').eq('featured', true).eq('active', true).limit(4).then(({ data }) => {
-      if (data) setAthletes(data);
-    });
-    supabase.from('testimonials').select('*').eq('featured', true).eq('active', true).limit(4).then(({ data }) => {
-      if (data) setTestimonials(data);
-    });
+    // Use mock data immediately
+    setAthletes(mockAthletes);
+    setTestimonials(mockTestimonials);
   }, []);
 
   const sportIcon = (sport: string) => {

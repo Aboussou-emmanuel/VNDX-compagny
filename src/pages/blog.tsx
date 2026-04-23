@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight, Tag } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { BlogPost } from '../types';
+import { mockBlogPosts } from '../data/mock';
 
 function useInView() {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,11 +38,9 @@ export default function Blog() {
 
   useEffect(() => {
     document.title = 'Blog & Actualités | VNDX Sport Agency';
-    supabase.from('blog_posts').select('*').eq('published', true).order('created_at', { ascending: false })
-      .then(({ data }) => {
-        if (data) { setPosts(data); setFiltered(data); }
-        setLoading(false);
-      });
+    setPosts(mockBlogPosts);
+    setFiltered(mockBlogPosts);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

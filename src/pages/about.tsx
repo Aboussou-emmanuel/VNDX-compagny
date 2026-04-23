@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Shield, Target, Zap, Award } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { TeamMember } from '../types';
+import { mockTeamMembers } from '../data/mock';
 
 function useInView() {
   const ref = useRef<HTMLDivElement>(null);
@@ -39,9 +39,7 @@ export default function About() {
 
   useEffect(() => {
     document.title = 'À Propos | VNDX Sport Agency';
-    supabase.from('team_members').select('*').eq('active', true).order('order_index').then(({ data }) => {
-      if (data) setTeam(data);
-    });
+    setTeam(mockTeamMembers);
   }, []);
 
   return (
@@ -75,10 +73,10 @@ export default function About() {
                 PROPULSER LES<br /><span className="gradient-text">CHAMPIONS</span>
               </h2>
               <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                VNDX Sport Agency est née d'une conviction simple : le talent ne suffit pas. Les meilleurs athlètes méritent un accompagnement d'exception pour transformer leur potentiel en carrière durable.
+                VNDX Company, fondée en décembre 2025, est une entreprise spécialisée dans la communication et le recrutement d’agents sportifs. Elle accompagne les talents et les professionnels du sport dans le développement de leur image, de leur réseau et de leurs opportunités de carrière.
               </p>
               <p className="text-gray-400 leading-relaxed mb-8">
-                Depuis 2016, nous accompagnons des centaines d'athlètes dans leur développement professionnel, en combinant expertise sportive, stratégie de communication et un réseau inégalé de clubs et sponsors partenaires.
+                Avec une vision moderne et ambitieuse, VNDX Company agit comme un catalyseur de connexions stratégiques entre agents et athlètes, en valorisant leur potentiel grâce à des stratégies de communication ciblées et innovantes. Positionnée à l’intersection du sport, du marketing et du conseil, l’entreprise vise à structurer et accélérer les parcours professionnels dans un environnement hautement compétitif.
               </p>
               <div className="grid grid-cols-3 gap-6">
                 {[{ v: '200+', l: 'Athlètes' }, { v: '50+', l: 'Clubs partenaires' }, { v: '4', l: 'Sports' }].map((s, i) => (

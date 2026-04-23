@@ -95,3 +95,12 @@ export const LEVEL_LABELS: Record<string, string> = {
   pro: 'Professionnel',
   elite: 'Elite',
 };
+
+import { User } from 'firebase/auth';
+
+export type UserRole = 'admin' | 'user';
+
+export interface UserWithRole extends User {
+  role?: UserRole;
+}
+

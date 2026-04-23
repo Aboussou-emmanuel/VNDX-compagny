@@ -24,10 +24,11 @@ export default function AdminApplications() {
     setLoading(true);
     let query = supabase.from('applications').select('*').order('created_at', { ascending: false });
     if (statusFilter) query = query.eq('status', statusFilter);
-    query.then(({ data }) => {
-      if (data) setApplications(data as Application[]);
+    query.then(({ data }: {data: Application[] }) => {
+      setApplications(data);
       setLoading(false);
     });
+
   }, [statusFilter]);
 
   useEffect(() => { load(); }, [statusFilter, load]);

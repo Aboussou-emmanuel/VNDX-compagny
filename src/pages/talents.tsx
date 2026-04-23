@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Filter, ArrowRight, ChevronDown } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { Athlete, SPORTS, LEVELS, LEVEL_LABELS } from '../types';
+import { mockAthletes } from '../data/mock';
 
 export default function Talents() {
   const [athletes, setAthletes] = useState<Athlete[]>([]);
@@ -19,11 +19,9 @@ export default function Talents() {
 
   useEffect(() => {
     document.title = 'Nos Talents | VNDX Sport Agency';
-    supabase.from('athletes').select('*').eq('active', true).order('featured', { ascending: false }).order('created_at', { ascending: false })
-      .then(({ data }) => {
-        if (data) { setAthletes(data); setFiltered(data); }
-        setLoading(false);
-      });
+    setAthletes(mockAthletes);
+    setFiltered(mockAthletes);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

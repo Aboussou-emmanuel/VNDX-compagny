@@ -26,10 +26,11 @@ export default function AdminBlog() {
   const load = () => {
     setLoading(true);
     supabase.from('blog_posts').select('*').order('created_at', { ascending: false })
-      .then(({ data }) => {
-        if (data) setPosts(data);
+      .then(({ data }: {data: BlogPost[] }) => {
+        setPosts(data);
         setLoading(false);
       });
+
   };
 
   useEffect(() => { load(); }, []);

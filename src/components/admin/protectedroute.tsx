@@ -12,7 +12,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     );
   }
 
-  if (!user) {
+  if (!user || user.role !== 'admin') {
     return <Navigate to="/admin/login" replace />;
   }
 

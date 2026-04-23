@@ -123,7 +123,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <Phone size={16} className="text-orange-500 mt-0.5 shrink-0" />
-                <span className="text-gray-400 text-sm">+33 1 XX XX XX XX</span>
+                <span className="text-gray-400 text-sm">+33 6 29 30 53 10</span>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={16} className="text-orange-500 mt-0.5 shrink-0" />
@@ -131,7 +131,7 @@ export default function Footer() {
               </li>
             </ul>
             <a
-              href="https://wa.me/33600000000"
+              href="https://wa.me/4915752900132?text=Bonjour%20VNDX%20Sport%20Agency%2C%20je%20souhaiterais%20en%20savoir%20plus%20sur%20vos%20services."
               target="_blank"
               rel="noopener noreferrer"
               className="mt-6 flex items-center gap-2 bg-[#25D366] text-white px-4 py-2.5 text-sm font-semibold hover:bg-[#1fba59] transition-colors duration-200"

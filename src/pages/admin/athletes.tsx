@@ -19,10 +19,11 @@ export default function AdminAthletes() {
 
   const load = () => {
     setLoading(true);
-    supabase.from('athletes').select('*').order('created_at', { ascending: false }).then(({ data }) => {
-      if (data) setAthletes(data);
+    supabase.from('athletes').select('*').order('created_at', { ascending: false }).then(({ data }: {data: Athlete[] }) => {
+      setAthletes(data);
       setLoading(false);
     });
+
   };
 
   useEffect(() => { load(); }, []);

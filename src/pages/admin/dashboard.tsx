@@ -32,6 +32,7 @@ export default function AdminDashboard() {
       if (recApps.data) setRecentApps(recApps.data);
       setLoading(false);
     });
+
   }, []);
 
   const statCards = [

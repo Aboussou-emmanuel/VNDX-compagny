@@ -61,7 +61,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="text-white font-medium text-sm mb-1">Téléphone</p>
-                  <p className="text-gray-400 text-sm">+33 1 XX XX XX XX</p>
+                  <p className="text-gray-400 text-sm">+33 6 29 30 53 10</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -77,7 +77,7 @@ export default function Contact() {
 
             {/* WhatsApp */}
             <a
-              href="https://wa.me/33600000000"
+              href="https://wa.me/4915752900132?text=Bonjour%20VNDX%20Sport%20Agency%2C%20je%20souhaiterais%20en%20savoir%20plus%20sur%20vos%20services."
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 bg-[#25D366] text-white px-6 py-4 font-semibold hover:bg-[#1fba59] transition-colors"

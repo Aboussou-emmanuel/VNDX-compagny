@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, MapPin, Calendar, ExternalLink, ChevronRight } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { Athlete, LEVEL_LABELS } from '../types';
+import { mockAthletes } from '../data/mock';
 
 export default function TalentDetail() {
   const { id } = useParams<{ id: string }>();
@@ -12,16 +12,14 @@ export default function TalentDetail() {
 
   useEffect(() => {
     if (!id) return;
-    supabase.from('athletes').select('*').eq('id', id).eq('active', true).maybeSingle()
-      .then(({ data }) => {
-        setAthlete(data);
-        setLoading(false);
-        if (data) {
-          document.title = `${data.name} | VNDX Sport Agency`;
-          supabase.from('athletes').select('*').eq('sport', data.sport).eq('active', true).neq('id', id).limit(3)
-            .then(({ data: rel }) => { if (rel) setRelated(rel); });
-        }
-      });
+    const data = mockAthletes.find(a => a.id === id);
+    setAthlete(data || null);
+    setLoading(false);
+    if (data) {
+      document.title = `${data.name} | VNDX Sport Agency`;
+      const rel = mockAthletes.filter(a => a.sport === data.sport && a.id !== id).slice(0, 3);
+      setRelated(rel);
+    }
   }, [id]);
 
   const sportColors: Record<string, string> = {

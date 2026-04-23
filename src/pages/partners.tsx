@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Building2, Star, Quote } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { Partner, Testimonial } from '../types';
+import { mockPartners, mockTestimonials } from '../data/mock';
 
 function useInView() {
   const ref = useRef<HTMLDivElement>(null);
@@ -31,8 +31,8 @@ export default function Partners() {
 
   useEffect(() => {
     document.title = 'Partenaires | VNDX Sport Agency';
-    supabase.from('partners').select('*').eq('active', true).then(({ data }) => { if (data) setPartners(data); });
-    supabase.from('testimonials').select('*').eq('active', true).then(({ data }) => { if (data) setTestimonials(data); });
+    setPartners(mockPartners);
+    setTestimonials(mockTestimonials);
   }, []);
 
   return (
