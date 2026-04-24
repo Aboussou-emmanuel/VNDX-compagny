@@ -1,17 +1,12 @@
-# VNDX Site Display Fix - Plan Implementation
+# TODO - Réparation du site VNDX
 
-Current status: Plan approved, implementing step-by-step.
+## Plan approuvé
 
-## Plan Steps:
-
-- [x] 1. Create TODO.md with breakdown
-- [x] 2. Edit src/pages/home.tsx - Add static sample data for athletes & testimonials (fixed TS errors)
-- [x] 3. Improve loading states with better fallbacks
-- [x] 4. Restart dev server if needed
-- [x] 5. Verify fix with attempt_completion
-
-**FIX COMPLETE** 🎉
-
-- Home page now shows 4 athlete cards + 4 testimonials with real images/data.
-- Visit http://localhost:5180/
-- Ready for Netlify deploy.
+- [x] Analyse complète du code et identification des erreurs
+- [x] Étape 1 : Corriger `src/lib/firebase.ts` (types, paramètres inutilisés)
+- [x] Étape 2 : Corriger `src/contexts/authcontext.tsx` (auth initialisé, signOut récursif, try/catch)
+- [x] Étape 3 : Corriger `src/components/admin/adminlayout.tsx` (appel useAuth)
+- [x] Étape 4 : Corriger `src/data/mock.ts` (imports inutilisés)
+- [x] Étape 5 : Corriger `src/lib/supabase.ts` (mock chaînable complet)
+- [x] Étape 6 : Rebuild (`npm run build`)
+- [x] Étape 7 : Vérification build OK

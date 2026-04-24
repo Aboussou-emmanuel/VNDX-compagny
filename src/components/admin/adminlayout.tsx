@@ -15,6 +15,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();

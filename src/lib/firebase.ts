@@ -14,7 +14,7 @@ const firebaseConfig = {
 // Mock if no config
 // Removed conflicting import, use local config
 
-let app, auth, db;
+let app: any, auth: any, db: any;
 if (firebaseConfig.apiKey) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
@@ -24,7 +24,7 @@ if (firebaseConfig.apiKey) {
   app = null;
   auth = {
     currentUser: null,
-    signInWithEmailAndPassword: (email: string, pass: string) => Promise.resolve({ user: { email, uid: `mock-${Date.now()}` } } as any),
+    signInWithEmailAndPassword: (email: string, _pass: string) => Promise.resolve({ user: { email, uid: `mock-${Date.now()}` } } as any),
     signOut: (_auth: any) => Promise.resolve(),
     onAuthStateChanged: (cb: (user: any) => void) => cb(null)
   } as any;
@@ -42,10 +42,10 @@ if (firebaseConfig.apiKey) {
         exists: () => false,
         data: () => ({})
       }),
-      set: (data: any) => Promise.resolve(),
+      set: (_data: any) => Promise.resolve(),
     }),
     getDoc: (ref: any) => ref.get(),
-    setDoc: (ref: any, data: any, options: any) => ref.set(data)
+    setDoc: (ref: any, _data: any, _options: any) => ref.set(_data)
 
   } as any;
 
@@ -53,3 +53,4 @@ if (firebaseConfig.apiKey) {
 
 export { auth, db };
 export default app;
+

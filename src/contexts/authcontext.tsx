@@ -1,11 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from 'firebase/auth';
 import type { UserWithRole, UserRole } from '../types';
 import { 
-  getAuth, 
   signInWithEmailAndPassword, 
   onAuthStateChanged,
-  signOut 
+  signOut as firebaseSignOut
 } from 'firebase/auth';
 import { 
   doc, 
@@ -13,10 +12,7 @@ import {
   setDoc, 
   serverTimestamp 
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-// firebaseConfig not needed
-
-const auth = getAuth();
+import { auth, db } from '../lib/firebase';
 
 interface AuthContextType {
   user: UserWithRole | null;
@@ -59,19 +55,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const userWithRole = await loadUserRole(firebaseUser);
-        setUser(userWithRole);
-        setRole(userWithRole.role ?? 'user');
-      } else {
-        setUser(null);
-        setRole(null);
-      }
+    let unsubscribe = () => {};
+    try {
+      unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          const userWithRole = await loadUserRole(firebaseUser);
+          setUser(userWithRole);
+          setRole(userWithRole.role ?? 'user');
+        } else {
+          setUser(null);
+          setRole(null);
+        }
+        setLoading(false);
+      });
+    } catch (err) {
+      console.error('Auth state error:', err);
       setLoading(false);
-    });
+    }
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -96,7 +98,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    await signOut();
+    try {
+      await firebaseSignOut(auth);
+    } catch (err) {
+      console.error('Sign out error:', err);
+    }
   };
 
   return (

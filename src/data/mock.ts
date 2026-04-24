@@ -1,5 +1,4 @@
 import { Athlete, Testimonial, TeamMember, Partner, BlogPost } from '../types';
-import { LEVELS, LEVEL_LABELS } from '../types';
 
 export const mockAthletes: Athlete[] = [
   {
